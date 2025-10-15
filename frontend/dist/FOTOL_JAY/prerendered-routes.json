@@ -1,0 +1,10 @@
+{
+  "routes": {
+    "/": {},
+    "/admin/dashboard": {},
+    "/login": {},
+    "/products": {},
+    "/register": {},
+    "/vendor/products": {}
+  }
+}

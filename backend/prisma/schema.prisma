@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+// Enums
+enum Role {
+  seller
+  admin
+}
+
+enum ProductStatus {
+  pending
+  published
+  rejected
+  deleted
+}
+
+enum NotificationType {
+  expiration
+  approval
+  general
+}
+
+// Models
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String?
+  phone         String?        @unique
+  email         String?        @unique
+  password      String
+  role          Role           @default(seller)
+  createdAt     DateTime       @default(now())
+  products      Product[]
+  notifications Notification[]
+}
+
+model Product {
+  id           Int             @id @default(autoincrement())
+  sellerId     Int
+  seller       User            @relation(fields: [sellerId], references: [id])
+  title        String
+  description  String?
+  price        Float
+  status       ProductStatus   @default(pending)
+  createdAt    DateTime        @default(now())
+  approvedAt   DateTime?
+  publishedAt  DateTime?
+  expireAt     DateTime?
+  images       ProductImage[]
+
+  @@index([title])
+  @@index([status])
+}
+
+model ProductImage {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  url        String
+  filename   String
+  capturedAt DateTime?
+  meta       Json?
+}
+
+model Notification {
+  id      Int              @id @default(autoincrement())
+  userId  Int
+  user    User             @relation(fields: [userId], references: [id])
+  type    NotificationType
+  payload Json
+  sentAt  DateTime         @default(now())
+  read    Boolean          @default(false)
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotol Jay - Marketplace Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-gold {
+            background: linear-gradient(135deg, #d4a574 0%, #c9932e 50%, #d4a574 100%);
+        }
+
+        .gradient-dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .banner-overlay {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.9) 100%);
+        }
+
+        .hover-gold {
+            transition: all 0.3s ease;
+        }
+
+        .hover-gold:hover {
+            background-color: #c9932e;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(201, 147, 46, 0.3);
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .yellow-glow {
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Banner -->
+    <div class="gradient-gold py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-black text-center font-semibold text-lg">🎯 Offres Spéciales du Mois - Profitez de nos promotions exclusives !</p>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="bg-black border-b-4 border-yellow-600 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000000'/%3E%3Cpath d='M30 35 Q30 25 40 25 L60 25 Q70 25 70 35 L70 40 L65 45 L35 45 L30 40 Z M25 45 L75 45 Q80 45 80 50 L80 70 Q80 75 75 75 L25 75 Q20 75 20 70 L20 50 Q20 45 25 45 Z' fill='none' stroke='%23d4a574' stroke-width='4'/%3E%3Ccircle cx='50' cy='57' r='15' fill='none' stroke='%23d4a574' stroke-width='3'/%3E%3Cpath d='M50 47 L45 57 L50 57 L48 67 L55 57 L50 57 Z' fill='%23d4a574'/%3E%3C/svg%3E" alt="Fotol Jay Logo" class="w-16 h-16">
+                    <div>
+                        <h1 class="text-3xl font-bold text-yellow-600 tracking-tight">FOTOL JAY</h1>
+                        <p class="text-yellow-500 text-xs">Marketplace Premium</p>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="flex-1 max-w-2xl w-full">
+                    <div class="flex gap-2">
+                        <input type="text" 
+                               placeholder="Rechercher une annonce..." 
+                               class="flex-1 px-6 py-3 rounded-lg border-2 border-yellow-600 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50">
+                        <button class="px-8 py-3 gradient-gold text-black font-semibold rounded-lg hover-gold">
+                            🔍
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-3">
+                    <button class="px-6 py-3 gradient-gold text-black font-bold rounded-lg hover-gold">
+                        Vendre
+                    </button>
+                    <button class="px-6 py-3 bg-transparent border-2 border-yellow-600 text-yellow-600 font-bold rounded-lg hover:bg-yellow-600 hover:text-black transition-all duration-300">
+                        Connexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-900 shadow-lg">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-wrap justify-center lg:justify-between">
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Véhicules</a>
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Offres d'emploi</a>
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Immobilier</a>
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Multimédia</a>
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Maison</a>
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Autres</a>
+                <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Boutiques</a>
+                <a href="#" class="px-6 py-4 gradient-gold text-black font-bold transition-all duration-300">🔥 Promo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Banner -->
+    <section class="max-w-7xl mx-auto px-4 py-12">
+        <div class="relative gradient-dark rounded-3xl overflow-hidden shadow-2xl border-2 border-yellow-600">
+            <div class="banner-overlay p-12 lg:p-16">
+                <div class="grid lg:grid-cols-2 gap-8 items-center">
+                    <!-- Text Content -->
+                    <div class="text-white space-y-6 animate-float">
+                        <h2 class="text-4xl lg:text-5xl font-bold">Nouveaux Appartements</h2>
+                        <div class="text-7xl lg:text-8xl font-black text-yellow-500 leading-none">
+                            F3 - F4
+                        </div>
+                        <p class="text-2xl lg:text-3xl font-semibold text-yellow-400">EN PLEIN CENTRE-VILLE</p>
+                        <div class="text-5xl lg:text-6xl font-bold text-white">
+                            À partir de <span class="text-yellow-500">5M</span>
+                        </div>
+                    </div>
+
+                    <!-- Images Grid -->
+                    <div class="relative h-96 hidden lg:block">
+                        <div class="absolute top-0 left-0 w-72 h-48  rounded-2xl transform -rotate-6 shadow-2xl yellow-glow" style="background-image: url(/frontend/public/images/telephone.jpg);"></div>
+                        <div class="absolute top-12 left-20 w-80 h-52 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl transform rotate-3 shadow-2xl z-10 border-2 border-yellow-600"></div>
+                        <div class="absolute top-32 left-8 w-64 h-44 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-2xl transform -rotate-3 shadow-2xl"></div>
+                    </div>
+                </div>
+
+                <!-- Contact Box -->
+                <div class="absolute bottom-8 right-8 bg-white p-6 rounded-2xl shadow-2xl yellow-glow hidden lg:block">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Contact</h3>
+                    <div class="space-y-2">
+                        <a href="tel:+221771234567" class="block text-xl font-bold text-yellow-600 hover:text-yellow-700">
+                            +221 77 123 45 67
+                        </a>
+                        <a href="tel:+221789876543" class="block text-xl font-bold text-yellow-600 hover:text-yellow-700">
+                            +221 78 987 65 43
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tagline -->
+    <div class="text-center py-12">
+        <h2 class="text-4xl lg:text-5xl font-light text-gray-700">
+            Tout acheter, tout vendre, <span class="text-yellow-600 font-semibold">tout simplement</span>
+        </h2>
+    </div>
+
+    <!-- Categories Section -->
+    <section class="max-w-7xl mx-auto px-4 py-12">
+        <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">Catégories <span class="text-yellow-600">Populaires</span></h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🚗</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Véhicules</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">💼</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Emploi</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🏠</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Immobilier</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📱</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Électronique</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🛋️</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Maison</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">👔</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Mode</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">⚽</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Sports</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+                <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🎓</div>
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Formation</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white mt-20 border-t-4 border-yellow-600">
+        <div class="max-w-7xl mx-auto px-4 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold text-yellow-600 mb-6">À propos</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Qui sommes-nous</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Carrières</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold text-yellow-600 mb-6">Services</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Publier une annonce</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Ouvrir une boutique</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Tarifs</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold text-yellow-600 mb-6">Aide</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Centre d'aide</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Conditions d'utilisation</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Confidentialité</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold text-yellow-600 mb-6">Suivez-nous</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Facebook</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Twitter</a></li>
+                        <li><a href="#" class="hover:text-yellow-600 transition-colors">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-yellow-900 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 <span class="text-yellow-600 font-semibold">FOTOL JAY</span> - Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

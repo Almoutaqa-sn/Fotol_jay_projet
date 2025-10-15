@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.gradient-gold {
+  background: linear-gradient(135deg, #d4a574 0%, #c9932e 50%, #d4a574 100%);
+}
+
+.gradient-dark {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.banner-overlay {
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.9) 100%);
+}
+
+.hover-gold {
+  transition: all 0.3s ease;
+}
+
+.hover-gold:hover {
+  background-color: #c9932e;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(201, 147, 46, 0.3);
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.yellow-glow {
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.5);
+}

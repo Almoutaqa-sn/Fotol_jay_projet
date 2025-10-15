@@ -1,0 +1,85 @@
+<div class="min-h-screen bg-gray-100">
+  <app-navigation></app-navigation>
+
+  <!-- Welcome Banner -->
+  <div class="bg-yellow-600 py-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-black mb-2">Validation des Produits</h1>
+        <p class="text-black text-lg">Approuvez ou rejetez les produits en attente</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Products List -->
+      <div *ngIf="!loading && products.length > 0" class="bg-white shadow overflow-hidden sm:rounded-md">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">Produits en attente de validation ({{ products.length }})</h3>
+        </div>
+        <ul role="list" class="divide-y divide-gray-200">
+          <li *ngFor="let product of products" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <img [src]="product.images[0]?.url || 'assets/placeholder.jpg'"
+                     [alt]="product.title"
+                     class="w-20 h-20 object-cover rounded-lg border-2 border-gray-200"
+                     (error)="handleImageError($event)">
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-gray-900">{{ product.title }}</h3>
+                  <p class="text-sm text-gray-600 mb-1">{{ product.description | slice:0:80 }}...</p>
+                  <div class="flex items-center space-x-4">
+                    <span class="text-lg font-bold text-yellow-600">{{ product.price | currency:'XOF':'symbol':'1.0-0' }}</span>
+                    <span class="bg-yellow-100 text-yellow-800 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium">
+                      En attente
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button (click)="approveProduct(product.id)" class="bg-green-100 text-green-700 px-3 py-1 rounded-md hover:bg-green-200 text-sm font-medium transition-colors">
+                  Approuver
+                </button>
+                <button (click)="rejectProduct(product.id)" class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition-colors">
+                  Rejeter
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+        <p class="ml-4 text-gray-600">Chargement des produits...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="bg-red-50 border-l-4 border-red-400 p-4 my-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-red-700">{{ error }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && !error && products.length === 0" class="bg-white rounded-lg shadow p-12 text-center">
+        <div class="mb-6">
+          <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun produit en attente</h3>
+        <p class="text-gray-600 mb-6">Tous les produits ont été validés ou il n'y a pas de nouveaux produits à approuver.</p>
+      </div>
+    </div>
+  </div>
+</div>

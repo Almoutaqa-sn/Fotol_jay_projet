@@ -1,0 +1,22 @@
+export const ErrorCode = {
+  // Erreurs d'authentification
+  INVALID_CREDENTIALS: 1001,
+  USER_NOT_FOUND: 1002,
+  EMAIL_ALREADY_EXISTS: 1003,
+  INVALID_TOKEN: 1004,
+
+  // Erreurs de validation
+  INVALID_DATA: 2001,
+  MISSING_REQUIRED_FIELD: 2002,
+  INVALID_EMAIL: 2003,
+  INVALID_PASSWORD: 2004,
+  INVALID_PRICE: 2005,
+
+  // Erreurs de produit
+  PRODUCT_NOT_FOUND: 3001,
+  UNAUTHORIZED_ACTION: 3002,
+
+  // Erreurs générales
+  INTERNAL_SERVER_ERROR: 5000,
+  DATABASE_ERROR: 5001
+};

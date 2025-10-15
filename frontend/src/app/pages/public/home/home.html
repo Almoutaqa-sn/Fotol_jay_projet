@@ -1,0 +1,398 @@
+<!-- Top Banner -->
+<div class="bg-yellow-600 py-4">
+  <div class="max-w-7xl mx-auto px-4">
+    <p class="text-black text-center font-semibold text-lg">Offres Spéciales du Mois - Profitez de nos promotions exclusives !</p>
+  </div>
+</div>
+
+<!-- Main Header -->
+<header class="bg-black border-b-4 border-yellow-600 shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-4">
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000000'/%3E%3Cpath d='M30 35 Q30 25 40 25 L60 25 Q70 25 70 35 L70 40 L65 45 L35 45 L30 40 Z M25 45 L75 45 Q80 45 80 50 L80 70 Q80 75 75 75 L25 75 Q20 75 20 70 L20 50 Q20 45 25 45 Z' fill='none' stroke='%23d4a574' stroke-width='4'/%3E%3Ccircle cx='50' cy='57' r='15' fill='none' stroke='%23d4a574' stroke-width='3'/%3E%3Cpath d='M50 47 L45 57 L50 57 L48 67 L55 57 L50 57 Z' fill='%23d4a574'/%3E%3C/svg%3E" alt="Fotol Jay Logo" class="w-16 h-16">
+        <div>
+          <h1 class="text-3xl font-bold text-yellow-600 tracking-tight">FOTOL JAY</h1>
+          <p class="text-yellow-500 text-xs">Marketplace Premium</p>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-2xl w-full">
+        <div class="flex gap-2">
+          <input type="text"
+                 placeholder="Rechercher une annonce..."
+                 class="flex-1 px-6 py-3 rounded-lg border-2 border-yellow-600 bg-gray-900 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50">
+          <button class="px-8 py-3 bg-yellow-600 text-black font-semibold rounded-lg hover:bg-yellow-700">
+            🔍
+          </button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-3">
+        <button (click)="openSellModal()" class="px-6 py-3 bg-yellow-600 text-black font-bold rounded-lg hover:bg-yellow-700">
+          Vendre
+        </button>
+        <button (click)="navigateToLogin()" class="px-6 py-3 bg-transparent border-2 border-yellow-600 text-yellow-600 font-bold rounded-lg hover:bg-yellow-600 hover:text-black transition-all duration-300">
+          Connexion
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Navigation -->
+<nav class="bg-gray-900 shadow-lg">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-wrap justify-center lg:justify-between">
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Véhicules</a>
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Offres d'emploi</a>
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Immobilier</a>
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Multimédia</a>
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Maison</a>
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Autres</a>
+      <a href="#" class="px-6 py-4 text-white hover:bg-yellow-600 hover:text-black transition-all duration-300 font-medium">Boutiques</a>
+      <a href="#" class="px-6 py-4 bg-yellow-600 text-black font-bold transition-all duration-300">Promo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Banner -->
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <div class="relative gradient-dark rounded-3xl overflow-hidden shadow-2xl border-2 border-yellow-600">
+    <div class="banner-overlay p-12 lg:p-16">
+      <div class="grid lg:grid-cols-2 gap-8 items-center">
+        <!-- Text Content -->
+        <div class="text-white space-y-6 animate-float">
+           <div class="text-7xl lg:text-8xl font-black text-yellow-500 leading-none">
+            FOTOL JAY
+          </div>
+          <h2 class="text-4xl lg:text-5xl font-bold">Achats et Ventes de produis</h2>
+         
+          <p class="text-2xl lg:text-3xl font-semibold text-yellow-400">AVEC AUTHENTICITE</p>
+          <div class="text-5xl lg:text-6xl font-bold text-white">
+            Depuis <span class="text-yellow-500">Chez Toi</span>
+          </div>
+        </div>
+
+        <!-- Images Grid -->
+      <div class="relative h-96 hidden lg:block">
+  <div
+    class="absolute top-0 left-0 w-72 h-48 bg-cover bg-center rounded-2xl transform -rotate-6 shadow-2xl yellow-glow"
+    style="background-image: url('/telephone.jpg');"
+  ></div>
+
+  <div
+    class="absolute top-12 left-20 w-80 h-52 bg-cover bg-center rounded-2xl transform rotate-3 shadow-2xl z-10 border-2 border-yellow-600"
+    style="background-image: url('/voiture.jpg');"
+  ></div>
+
+  <div
+    class="absolute top-32 left-8 w-64 h-44 bg-cover bg-center rounded-2xl transform -rotate-3 shadow-2xl"
+    style="background-image: url('/appartement.JPG');"
+  ></div>
+</div>
+
+      </div>
+
+      <!-- Contact Box -->
+      <div class="absolute bottom-8 right-8 bg-white p-6 rounded-2xl shadow-2xl yellow-glow hidden lg:block">
+        <h3 class="text-2xl font-bold text-gray-900 mb-3">Contact</h3>
+        <div class="space-y-2">
+          <a href="tel:+221771234567" class="block text-xl font-bold text-yellow-600 hover:text-yellow-700">
+            +221 78 522 54 00
+          </a>
+          <a href="tel:+221789876543" class="block text-xl font-bold text-yellow-600 hover:text-yellow-700">
+            +221 76 745 36 58
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tagline -->
+<div class="text-center py-12">
+  <h2 class="text-4xl lg:text-5xl font-light text-gray-700">
+    Tout acheter, tout vendre, <span class="text-yellow-600 font-semibold">tout simplement</span>
+  </h2>
+</div>
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">Top <span class="text-yellow-600">Produits</span></h2>
+
+  <div *ngIf="publishedProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let product of publishedProducts" (click)="viewProduct(product.id)" class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="aspect-w-1 aspect-h-1">
+        <img [src]="product.images[0]?.url || 'assets/placeholder.jpg'"
+             [alt]="product.title"
+             class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+             (error)="handleImageError($event)">
+      </div>
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-gray-900 group-hover:text-yellow-600 mb-2">{{ product.title }}</h3>
+        <p class="text-sm text-gray-600 mb-2 line-clamp-2">{{ product.description }}</p>
+        <div class="flex justify-between items-center">
+          <span class="text-xl font-bold text-yellow-600">{{ product.price | currency:'XOF':'symbol':'1.0-0' }}</span>
+          <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Approuvé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="publishedProducts.length === 0" class="text-center py-12">
+    <p class="text-gray-500">Aucun produit approuvé pour le moment.</p>
+  </div>
+
+</section>
+
+
+<!-- Categories Section -->
+<section class="max-w-7xl mx-auto px-4 py-12">
+  <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">Catégories <span class="text-yellow-600">Populaires</span></h2>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🚗</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Véhicules</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">💼</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Emploi</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🏠</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Immobilier</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📱</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Électronique</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🛋️</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Maison</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">👔</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Mode</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">⚽</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Sports</h3>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-yellow-600 cursor-pointer group">
+      <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🎓</div>
+      <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-600">Formation</h3>
+    </div>
+  </div>
+</section>
+<section *ngIf="isAdmin" class="max-w-7xl mx-auto px-4 py-12">
+  <h2 class="text-4xl font-bold text-center mb-12 text-gray-900">Produits en <span class="text-yellow-600">Attente d'approbation</span></h2>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center py-8">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+  </div>
+
+  <div *ngIf="pendingProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let product of pendingProducts" class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="relative h-48">
+        <img [src]="product.images[0]?.url || 'assets/placeholder.jpg'"
+             [alt]="product.title"
+             class="w-full h-full object-cover"
+             (error)="handleImageError($event)">
+        <div class="absolute top-2 right-2">
+          <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">En attente</span>
+        </div>
+      </div>
+      
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ product.title }}</h3>
+        <p class="text-gray-600 text-sm mb-2">{{ product.description | slice:0:100 }}...</p>
+        <p class="text-xl font-bold text-yellow-600 mb-4">{{ product.price | currency:'XOF':'symbol':'1.0-0' }}</p>
+        
+        <div class="flex space-x-2">
+          <button (click)="approveProduct(product.id)" 
+                  class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+            Approuver
+          </button>
+          <button (click)="rejectProduct(product.id)"
+                  class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+            Rejeter
+          </button>
+        </div>
+
+        <div *ngIf="product.seller" class="mt-4 pt-4 border-t border-gray-200">
+          <p class="text-sm text-gray-600">
+            Vendeur: {{ product.seller.name }}
+          </p>
+          <p class="text-xs text-gray-500">
+            Ajouté le: {{ product.createdAt | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && pendingProducts.length === 0" class="text-center py-12">
+    <p class="text-gray-500">Aucun produit en attente d'approbation.</p>
+  </div>
+
+</section>
+
+
+<!-- Sell Modal -->
+<div *ngIf="showSellModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold mb-2 text-center">Créer un compte vendeur</h2>
+    <p class="text-gray-600 mb-6 text-center">
+      Pour vendre vos produits en toute sécurité, créez votre compte vendeur.
+    </p>
+
+    <form [formGroup]="sellerForm" (ngSubmit)="onSellerRegister()">
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Nom complet</label>
+        <input type="text" formControlName="name" placeholder="Votre nom complet"
+               class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+        <div *ngIf="sellerForm.get('name')?.invalid && sellerForm.get('name')?.touched" class="text-red-500 text-sm mt-1">
+          Nom requis.
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Email</label>
+        <input type="email" formControlName="email" placeholder="votre.email@example.com"
+               class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+        <div *ngIf="sellerForm.get('email')?.invalid && sellerForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
+          Email invalide.
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Numéro de téléphone</label>
+        <div class="flex">
+          <span class="bg-gray-200 px-3 py-2 rounded-l-md">SN (+221)</span>
+          <input type="text" formControlName="phone" placeholder="Saisissez le numéro de mobile"
+                 class="flex-1 border border-gray-300 rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+        </div>
+        <div *ngIf="sellerForm.get('phone')?.invalid && sellerForm.get('phone')?.touched" class="text-red-500 text-sm mt-1">
+          Numéro invalide.
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Mot de passe</label>
+        <input type="password" formControlName="password" placeholder="Votre mot de passe"
+               class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400">
+        <div *ngIf="sellerForm.get('password')?.invalid && sellerForm.get('password')?.touched" class="text-red-500 text-sm mt-1">
+          Mot de passe requis (min 6 caractères).
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="sellerForm.invalid"
+              class="w-full bg-orange-500 text-white py-2 rounded-md mb-4 hover:bg-orange-600 transition">
+        Créer mon compte vendeur
+      </button>
+    </form>
+
+    <!-- <p class="text-center mb-4">ou</p>
+
+    <button (click)="loginWithFacebook()"
+            class="w-full bg-blue-600 text-white py-2 rounded-md mb-2 hover:bg-blue-700 transition flex items-center justify-center gap-2">
+      <span class="text-lg">f</span> Continuer avec Facebook
+    </button>
+
+    <button (click)="loginWithGoogle()"
+            class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition flex items-center justify-center gap-2">
+      <span class="text-lg">G</span> Continuer avec Google
+    </button> -->
+
+    <div class="text-center mt-4">
+      <p class="text-gray-500 text-sm">
+        Déjà un compte ? <a href="#" (click)="switchToLogin()" class="text-orange-500 underline">Se connecter</a>
+      </p>
+    </div>
+
+    <!-- Message de succès -->
+    <div *ngIf="registrationSuccess" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
+      <div class="flex items-center">
+        <span class="text-green-600 text-lg mr-2">✓</span>
+        <span>Compte vendeur créé avec succès ! Vous allez être redirigé vers la page de connexion.</span>
+      </div>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="registrationError" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+      <div class="flex items-center">
+        <span class="text-red-600 text-lg mr-2">✗</span>
+        <span>{{ registrationError }}</span>
+      </div>
+    </div>
+
+    <p class="text-center text-gray-500 text-sm mt-4">
+      En créant un compte, vous acceptez nos
+      <a href="#" class="text-orange-500 underline">Conditions et Charte d'utilisation</a>.
+    </p>
+
+    <p class="text-center text-gray-500 text-sm mt-2">
+      Besoin d'aide ? <a href="#" class="text-orange-500 underline">Contactez-nous</a>.
+    </p>
+
+    <button (click)="closeSellModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-black text-white mt-20 border-t-4 border-yellow-600">
+  <div class="max-w-7xl mx-auto px-4 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div>
+        <h3 class="text-2xl font-bold text-yellow-600 mb-6">À propos</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Qui sommes-nous</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Contact</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Carrières</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-bold text-yellow-600 mb-6">Services</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Publier une annonce</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Ouvrir une boutique</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Tarifs</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-bold text-yellow-600 mb-6">Aide</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Centre d'aide</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Conditions d'utilisation</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Confidentialité</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-bold text-yellow-600 mb-6">Suivez-nous</h3>
+        <ul class="space-y-3">
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Facebook</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Twitter</a></li>
+          <li><a href="#" class="hover:text-yellow-600 transition-colors">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-yellow-900 mt-12 pt-8 text-center">
+      <p class="text-gray-400">&copy; 2025 <span class="text-yellow-600 font-semibold">FOTOL JAY</span> - Tous droits réservés</p>
+    </div>
+  </div>
+</footer>

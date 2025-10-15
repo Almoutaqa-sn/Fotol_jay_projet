@@ -1,0 +1,164 @@
+<div class="min-h-screen bg-gray-100">
+  <app-navigation></app-navigation>
+
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <h1 class="text-3xl font-bold text-gray-900 mb-6">Dashboard Admin</h1>
+
+      <!-- Statistics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-600 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Produits</dt>
+                  <dd class="text-lg font-medium text-gray-900">{{ stats.totalProducts }}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-yellow-600 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">En Attente</dt>
+                  <dd class="text-lg font-medium text-gray-900">{{ stats.pendingProducts }}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Approuvés</dt>
+                  <dd class="text-lg font-medium text-gray-900">{{ stats.approvedProducts }}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Rejetés</dt>
+                  <dd class="text-lg font-medium text-gray-900">{{ stats.rejectedProducts }}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Products List -->
+      <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Produits en Attente d'Approbation
+            <span *ngIf="!loading && pendingProducts.length > 0" class="ml-2 text-sm text-gray-500">
+              ({{ pendingProducts.length }} produits)
+            </span>
+          </h3>
+          <button (click)="loadPendingProducts()" class="bg-yellow-600 text-black py-2 px-4 rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 text-sm">
+            Actualiser
+          </button>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading" class="flex flex-col items-center justify-center py-12">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <p class="mt-4 text-gray-600">Chargement des produits...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="error" class="p-4 bg-red-50 border-l-4 border-red-400">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-red-700">{{ error }}</p>
+              <button (click)="loadPendingProducts()" class="mt-2 text-sm font-medium text-red-600 hover:text-red-500">
+                Réessayer le chargement
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loading && !error && pendingProducts.length === 0" class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun produit en attente</h3>
+          <p class="mt-1 text-sm text-gray-500">Il n'y a actuellement aucun produit en attente d'approbation.</p>
+        </div>
+
+        <!-- Products List -->
+        <ul *ngIf="!loading && !error && pendingProducts.length > 0" role="list" class="divide-y divide-gray-200">
+          <li *ngFor="let product of pendingProducts" class="px-6 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <img [src]="product.images[0]?.url || 'placeholder.jpg'" [alt]="product.title" class="w-16 h-16 object-cover rounded-md mr-4">
+                <div>
+                  <h4 class="text-lg font-medium text-gray-900">{{ product.title }}</h4>
+                  <p class="text-sm text-gray-500">{{ product.description | slice:0:50 }}...</p>
+                  <p class="text-sm text-gray-600">Prix: {{ product.price | currency:'XOF':'symbol':'1.0-0' }}</p>
+                  <p class="text-sm text-gray-600">Vendeur: {{ product.seller?.name }}</p>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button (click)="approveProduct(product.id)" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                  Approuver
+                </button>
+                <button (click)="rejectProduct(product.id)" class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                  Rejeter
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

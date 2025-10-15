@@ -1,0 +1,262 @@
+<div class="min-h-screen bg-gray-100">
+  <app-navigation></app-navigation>
+
+  <!-- Welcome Banner -->
+  <div class="bg-yellow-600 py-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold text-black mb-2">Dashboard {{ userName }}</h1>
+        <p class="text-black text-lg">Gérez vos produits et suivez vos ventes</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 -mt-12 relative z-10 pt-8">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-yellow-600 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Produits</dt>
+                <dd class="text-lg font-medium text-gray-900">{{ products.length }}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-green-600 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Produits Approuvés</dt>
+                <dd class="text-lg font-medium text-gray-900">{{ getPublishedCount() }}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-yellow-600 rounded-md flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">En Attente</dt>
+                <dd class="text-lg font-medium text-gray-900">{{ getPendingCount() }}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 py-6 sm:px-0">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Gestion des Produits</h2>
+        <div class="flex space-x-2">
+          <button (click)="loadProducts()" class="bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+            Actualiser
+          </button>
+          <button (click)="showAddForm = !showAddForm" class="bg-yellow-600 text-black py-2 px-4 rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
+            {{ showAddForm ? 'Annuler' : 'Ajouter un Produit' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Add Product Form -->
+      <div *ngIf="showAddForm" class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4">Ajouter un Nouveau Produit</h2>
+        <form (ngSubmit)="onAddProduct()" class="space-y-6" enctype="multipart/form-data">
+          <!-- Loading indicator -->
+          <div *ngIf="loading" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-4 rounded-lg shadow-lg">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+              <p class="mt-2">Ajout du produit en cours...</p>
+            </div>
+          </div>
+
+          <!-- Error message -->
+          <div *ngIf="error" class="bg-red-50 border-l-4 border-red-400 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-red-700">{{ error }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success message -->
+          <div *ngIf="successMessage" class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <div class="ml-3 flex-1">
+                <p class="text-sm text-green-700 font-medium">{{ successMessage }}</p>
+                <button (click)="successMessage = null" class="mt-1 text-xs text-green-600 hover:text-green-800 underline">Fermer</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="title" class="block text-sm font-medium text-gray-700">Titre *</label>
+              <input type="text" id="title" [(ngModel)]="newProduct.title" name="title" required
+                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                     placeholder="Titre du produit" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div>
+              <label for="price" class="block text-sm font-medium text-gray-700">Prix (XOF) *</label>
+              <input type="number" id="price" [(ngModel)]="newProduct.price" name="price" required min="1"
+                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                     placeholder="0" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+          <div class="mt-4">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description *</label>
+            <textarea id="description" [(ngModel)]="newProduct.description" name="description" rows="3" required
+                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                      placeholder="Décrivez votre produit..." [ngModelOptions]="{standalone: true}"></textarea>
+          </div>
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-700">Photo du produit *</label>
+            <div class="flex items-center gap-2 mb-3">
+              <button type="button" (click)="openCamera()" class="bg-yellow-600 text-black px-4 py-2 rounded hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed" [disabled]="loading">📸 Ouvrir caméra</button>
+              <button type="button" *ngIf="showCamera" (click)="capturePhoto()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" [disabled]="loading">📷 Prendre photo</button>
+              <button type="button" *ngIf="showCamera" (click)="closeCamera()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">❌ Fermer caméra</button>
+            </div>
+
+            <video *ngIf="showCamera" #video autoplay playsinline class="border rounded-lg w-full max-w-md mb-2"></video>
+            <canvas #canvas style="display:none;"></canvas>
+
+            <div *ngIf="capturedImage" class="mt-2">
+              <h4 class="font-semibold text-green-600">✓ Photo capturée</h4>
+              <img [src]="capturedImage" alt="Aperçu" class="rounded-lg w-48 border border-green-200" />
+            </div>
+
+            <div *ngIf="!capturedImage && !showCamera" class="mt-2 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p class="text-sm text-yellow-800">📷 Utilisez la caméra pour prendre une photo de votre produit</p>
+            </div>
+          </div>
+          <div class="mt-6">
+            <button type="submit" (click)="onAddProduct()" [disabled]="loading" class="bg-yellow-600 text-black py-2 px-4 rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span *ngIf="loading" class="inline-flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Ajout en cours...
+              </span>
+              <span *ngIf="!loading">Ajouter le Produit</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Products List -->
+      <div *ngIf="!loading && !error && products.length > 0" class="bg-white shadow overflow-hidden sm:rounded-md">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-lg font-medium text-gray-900">Vos Produits ({{ products.length }})</h3>
+        </div>
+        <ul role="list" class="divide-y divide-gray-200">
+          <li *ngFor="let product of products" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <img [src]="product.images[0]?.url || 'assets/placeholder.jpg'"
+                     [alt]="product.title"
+                     class="w-20 h-20 object-cover rounded-lg border-2 border-gray-200"
+                     (error)="handleImageError($event)">
+                <div class="flex-1">
+                  <h3 class="text-lg font-semibold text-gray-900">{{ product.title }}</h3>
+                  <p class="text-sm text-gray-600 mb-1">{{ product.description | slice:0:80 }}...</p>
+                  <div class="flex items-center space-x-4">
+                    <span class="text-lg font-bold text-yellow-600">{{ product.price | currency:'XOF':'symbol':'1.0-0' }}</span>
+                    <span [ngClass]="getStatusClass(product.status)" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium">
+                      {{ getStatusText(product.status) }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <button (click)="editProduct(product)" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-md hover:bg-yellow-200 text-sm font-medium transition-colors">
+                  Modifier
+                </button>
+                <button (click)="deleteProduct(product.id)" class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition-colors">
+                  Supprimer
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+        <p class="ml-4 text-gray-600">Chargement des produits...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="bg-red-50 border-l-4 border-red-400 p-4 my-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-red-700">{{ error }}</p>
+            <button (click)="loadProducts()" class="mt-2 text-sm font-medium text-red-600 hover:text-red-500">
+              Réessayer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && !error && products.length === 0" class="bg-white rounded-lg shadow p-12 text-center">
+        <div class="mb-6">
+          <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun produit pour le moment</h3>
+        <p class="text-gray-600 mb-6">Commencez par ajouter votre premier produit à votre boutique.</p>
+        <button (click)="showAddForm = true" class="bg-yellow-600 text-black px-6 py-3 rounded-lg hover:bg-yellow-700 font-semibold">
+          Ajouter mon premier produit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

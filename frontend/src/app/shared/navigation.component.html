@@ -1,0 +1,37 @@
+<!-- Navigation Bar -->
+<nav [ngClass]="getNavClass()" class="text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <a routerLink="/" class="text-xl font-bold">FOTOL JAY</a>
+      </div>
+      <div class="hidden md:flex items-center space-x-4">
+        <a routerLink="/products" class="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Produits</a>
+        <a *ngIf="isLoggedIn && userRole === 'seller'" routerLink="/vendor/products" class="hover:bg-gold-600 px-3 py-2 rounded-md text-sm font-medium">Mes Produits</a>
+        <a *ngIf="isLoggedIn && userRole === 'admin'" routerLink="/admin/dashboard" class="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Admin</a>
+        <a *ngIf="!isLoggedIn" routerLink="/login" class="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Connexion</a>
+        <a *ngIf="!isLoggedIn" routerLink="/register" class="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Inscription</a>
+        <button *ngIf="isLoggedIn" (click)="logout()" class="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Déconnexion</button>
+      </div>
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center">
+        <button (click)="toggleMenu()" class="bg-blue-600 inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div *ngIf="menuOpen" class="md:hidden">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gold-600">
+      <a routerLink="/products" class="block hover:bg-gold-700 px-3 py-2 rounded-md text-base font-medium">Produits</a>
+      <a *ngIf="isLoggedIn && userRole === 'seller'" routerLink="/vendor/products" class="block hover:bg-gold-600 px-3 py-2 rounded-md text-base font-medium">Mes Produits</a>
+      <a *ngIf="isLoggedIn && userRole === 'admin'" routerLink="/admin/dashboard" class="block hover:bg-blue-800 px-3 py-2 rounded-md text-base font-medium">Admin</a>
+      <a *ngIf="!isLoggedIn" routerLink="/login" class="block hover:bg-blue-800 px-3 py-2 rounded-md text-base font-medium">Connexion</a>
+      <a *ngIf="!isLoggedIn" routerLink="/register" class="block hover:bg-blue-800 px-3 py-2 rounded-md text-base font-medium">Inscription</a>
+      <button *ngIf="isLoggedIn" (click)="logout()" class="block w-full text-left hover:bg-blue-800 px-3 py-2 rounded-md text-base font-medium">Déconnexion</button>
+    </div>
+  </div>
+</nav>
