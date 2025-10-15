@@ -4,11 +4,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { ProductService, Product } from '../../../services/product.service';
+import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -21,6 +24,10 @@ export class Home implements OnInit {
   pendingProducts: Product[] = [];
   publishedProducts: Product[] = [];
   isAdmin = false;
+  searchTerm = '';
+  isSearching = false;
+  searchTerms = new Subject<string>();
+  noResults = false;
 
   constructor(
     private router: Router,
@@ -44,6 +51,32 @@ export class Home implements OnInit {
     if (this.isAdmin) {
       this.loadPendingProducts();
     }
+
+    // Configurer la recherche avec debounce
+    this.searchTerms.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(term => {
+      if (term.length >= 3) {
+        this.isSearching = true;
+        this.productService.searchProducts(term).subscribe({
+          next: (products) => {
+            this.publishedProducts = products;
+            this.noResults = products.length === 0;
+            this.isSearching = false;
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            console.error('Search error:', err);
+            this.isSearching = false;
+            this.cdr.detectChanges();
+          }
+        });
+      } else if (term.length === 0) {
+        this.noResults = false;
+        this.loadPublishedProducts();
+      }
+    });
   }
 
   loadPublishedProducts() {
@@ -91,9 +124,28 @@ export class Home implements OnInit {
     this.router.navigate(['/auth/register']);
   }
 
-  searchProducts(searchTerm: string) {
-    // TODO: Implement search functionality
-    console.log('Search for:', searchTerm);
+  onSearch(term: string) {
+    this.searchTerms.next(term);
+  }
+
+  searchProducts() {
+    if (this.searchTerm.length >= 3) {
+      this.isSearching = true;
+      this.productService.searchProducts(this.searchTerm).subscribe({
+        next: (products) => {
+          this.publishedProducts = products;
+          this.isSearching = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Search error:', err);
+          this.isSearching = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } else if (this.searchTerm.length === 0) {
+      this.loadPublishedProducts(); // Recharge tous les produits si recherche vide
+    }
   }
 
   openSellModal() {

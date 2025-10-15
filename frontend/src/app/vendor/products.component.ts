@@ -56,10 +56,8 @@ export class VendorProductsComponent implements OnInit {
     const user = this.authService.getUser();
     this.userName = user ? user.name : '';
 
-    // Only load products if we don't have any cached data
-    if (this.products.length === 0) {
-      this.loadProducts();
-    }
+    // Always load products on init (not just when empty)
+    this.loadProducts();
   }
 
   loadProducts() {

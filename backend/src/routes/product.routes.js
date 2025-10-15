@@ -201,11 +201,58 @@ router.post('/create', authMiddleware, upload.array('images'), async (req, res) 
     }
 });
 
+// Search published products
+router.get('/search', async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.length < 3) {
+      return res.status(400).json({ error: 'Search term must be at least 3 characters long' });
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        status: 'published',
+        OR: [
+          {
+            title: {
+              contains: q
+            }
+          },
+          {
+            description: {
+              contains: q
+            }
+          }
+        ]
+      },
+      include: {
+        images: true,
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    res.json(products);
+  } catch (error) {
+    console.error('Error searching products:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
 // Get product by ID
 router.get('/:id', async (req, res) => {
   try {
     const product = await prisma.product.findUnique({
-      where: { 
+      where: {
         id: parseInt(req.params.id)
       },
       include: {

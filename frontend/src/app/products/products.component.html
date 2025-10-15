@@ -1,19 +1,26 @@
 <div class="min-h-screen bg-gray-100">
   <app-navigation></app-navigation>
 
-  <!-- <app-navigation></app-navigation> -->
-
 <div class="p-4">
    <h2 class="text-xl font-bold mb-3 text-gray-900">Produits disponibles</h2>
+
+   <!-- Search Bar -->
+   <div class="mb-6">
+     <input type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            placeholder="Rechercher un produit..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+   </div>
 
    <div *ngIf="loading" class="flex items-center justify-center py-12">
      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
      <p class="ml-4 text-gray-600">Chargement des produits...</p>
    </div>
 
-   <div *ngIf="!loading && products.length">
+   <div *ngIf="!loading && filteredProducts.length">
      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-       <div *ngFor="let p of products" class="bg-white border p-4 rounded-lg shadow hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-transparent hover:border-yellow-600">
+       <div *ngFor="let p of filteredProducts" class="bg-white border p-4 rounded-lg shadow hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-transparent hover:border-yellow-600">
          <h4 class="font-bold text-lg mb-2 text-gray-900">{{ p.title }}</h4>
          <p class="text-gray-600 mb-2">{{ p.description }}</p>
          <p class="font-semibold text-yellow-600 mb-2">Prix : {{ p.price | currency:'XOF':'symbol':'1.0-0' }}</p>
@@ -28,7 +35,11 @@
      </div>
    </div>
 
-   <div *ngIf="!loading && !products.length" class="text-center py-8">
+   <div *ngIf="!loading && !filteredProducts.length && searchTerm.length >= 3" class="text-center py-8">
+     <p class="text-gray-500">Aucun produit trouvé pour "{{ searchTerm }}".</p>
+   </div>
+
+   <div *ngIf="!loading && !filteredProducts.length && searchTerm.length < 3" class="text-center py-8">
      <p class="text-gray-500">Aucun produit disponible pour le moment.</p>
    </div>
 </div>

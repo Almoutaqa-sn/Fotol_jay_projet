@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product.interface';
 import { NavigationComponent } from '../../../shared/navigation.component';
+import { finalize } from 'rxjs/operators';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-product-details',
@@ -19,22 +21,25 @@ export class ProductDetails implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.loading = true;
     const id = parseInt(this.route.snapshot.paramMap.get('id') || '0');
+    this.loading = true;
     
-    this.productService.getProduct(id).subscribe({
-      next: (product: Product) => {
+    this.productService.getProduct(id).pipe(
+      finalize(() => {
+        this.loading = false;
+        this.cdr.detectChanges(); // Force change detection
+      })
+    ).subscribe({
+      next: (product) => {
         this.product = product;
-        this.loading = false;
       },
-      error: (err: Error) => {
-        console.error('Error loading product:', err);
-        this.error = 'Erreur lors du chargement du produit';
-        this.loading = false;
+      error: (err) => {
+        this.error = err;
       }
     });
   }

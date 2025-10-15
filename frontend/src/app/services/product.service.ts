@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEvent, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError, map, filter } from 'rxjs/operators';
+import { tap, catchError, map, filter, finalize } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Product } from '../interfaces/product.interface';
+import { environment } from '../../environments/environment';
 
 export type { Product };
 
@@ -17,7 +18,7 @@ interface ProductResponse {
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = '/api/products';
+  private apiUrl = `${environment.apiUrl}/products`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -31,6 +32,13 @@ export class ProductService {
   // Get published products (for public view)
   getPublishedProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/published`);
+  }
+
+  // Search published products
+  searchProducts(query: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/search`, {
+      params: { q: query }
+    });
   }
 
   // Get seller's products
@@ -118,7 +126,21 @@ export class ProductService {
   }
 
   getProduct(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}/${id}`).pipe(
+      tap(product => console.log('Fetched product:', product)),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error fetching product:', error);
+        return throwError(() => 
+          error.status === 404 ? 'Produit non trouvé' : 'Erreur lors du chargement du produit'
+        );
+      }),
+      finalize(() => console.log('Product fetch complete'))
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.error('Une erreur s\'est produite:', error);
+    return throwError(() => error.message || 'Une erreur est survenue');
   }
 }
 

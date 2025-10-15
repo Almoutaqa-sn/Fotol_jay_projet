@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProductService, Product } from '../services/product.service';
 import { NavigationComponent } from '../shared/navigation.component';
@@ -7,13 +8,15 @@ import { NavigationComponent } from '../shared/navigation.component';
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, NavigationComponent],
+  imports: [CommonModule, FormsModule, NavigationComponent],
   templateUrl: './products.component.html',
   styleUrls: []
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
+  filteredProducts: Product[] = [];
   loading = true;
+  searchTerm = '';
 
   constructor(private productService: ProductService, private cdr: ChangeDetectorRef, private router: Router) {}
 
@@ -25,6 +28,7 @@ export class ProductsComponent implements OnInit {
     this.productService.getPublishedProducts().subscribe({
       next: (data) => {
         this.products = data;
+        this.filteredProducts = data;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -34,6 +38,25 @@ export class ProductsComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  onSearch() {
+    if (this.searchTerm.length >= 3) {
+      this.productService.searchProducts(this.searchTerm).subscribe({
+        next: (results) => {
+          this.filteredProducts = results;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error searching products', err);
+          this.filteredProducts = this.products;
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.filteredProducts = this.products;
+      this.cdr.detectChanges();
+    }
   }
 
   viewProduct(productId: number) {
