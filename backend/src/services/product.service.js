@@ -47,14 +47,11 @@ export async function deleteProduct(productId) {
     });
 }
 
-// Rejeter un produit
+// Rejeter un produit (admin)
 export async function rejectProduct(productId) {
     return prisma.product.update({
         where: { id: productId },
-        data: { 
-            status: 'deleted',
-            rejectedAt: new Date()
-        }
+        data: { status: 'deleted' }
     });
 }
 

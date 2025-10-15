@@ -1,105 +1,112 @@
 <div class="min-h-screen bg-gray-100">
-  <app-navigation></app-navigation>
+  <app-navigation class="product-details-nav"></app-navigation>
 
-  <div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
-    <div class="px-4 py-6 sm:px-0">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600"></div>
+    </div>
 
-      <!-- Loading State -->
-      <div *ngIf="loading" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        <p class="ml-4 text-gray-600">Chargement du produit...</p>
+    <!-- Error state -->
+    <div *ngIf="error" class="text-center py-12">
+      <p class="text-red-500">{{ error }}</p>
+    </div>
+
+    <!-- Product details -->
+    <div *ngIf="product && !loading" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Image gallery -->
+      <div class="space-y-4">
+        <div class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
+          <img [src]="product.images[0]?.url || 'assets/placeholder.jpg'"
+               [alt]="product.title"
+               class="w-full h-full object-cover">
+        </div>
+        <div class="grid grid-cols-4 gap-4" *ngIf="product.images.length > 1">
+          <div *ngFor="let image of product.images.slice(1)" 
+               class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
+            <img [src]="image.url" 
+                 [alt]="product.title"
+                 class="w-full h-full object-cover">
+          </div>
+        </div>
       </div>
 
-      <!-- Error State -->
-      <div *ngIf="error && !loading" class="bg-red-50 border-l-4 border-red-400 p-4 my-4">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
-          </div>
-          <div class="ml-3">
-            <p class="text-red-700">{{ error }}</p>
+      <!-- Product info -->
+      <div class="space-y-6">
+        <h1 class="text-3xl font-bold text-gray-900">{{ product.title }}</h1>
+        <p class="text-4xl font-bold text-yellow-600">
+          {{ product.price | currency:'XOF':'symbol':'1.0-0' }}
+        </p>
+        <div class="prose prose-sm text-gray-600">
+          <p>{{ product.description }}</p>
+        </div>
+
+        <!-- Seller info -->
+        <div class="border-t border-gray-200 pt-6">
+          <h3 class="text-lg font-medium text-gray-900">Informations vendeur</h3>
+          <div class="mt-4 space-y-3">
+            <p class="text-gray-600">
+              <span class="font-medium">Nom :</span> {{ product.seller?.name }}
+            </p>
+            <button (click)="contactSeller()"
+                    class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition flex items-center justify-center gap-2">
+              <span class="text-xl">📱</span>
+              Contacter le vendeur
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Product Details -->
-      <div *ngIf="product && !loading && !error" class="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div class="px-4 py-5 sm:px-6">
-          <h1 class="text-3xl font-bold text-gray-900">{{ product.title }}</h1>
-          <p class="mt-1 text-sm text-gray-600">Produit #{{ product.id }}</p>
-        </div>
+    <!-- Product details card -->
+    <div *ngIf="product && !loading" class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Détails du produit</h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl>
+          <!-- Status -->
+          <div class="px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Statut</dt>
+            <dd class="mt-1">
+              <span [ngClass]="getStatusClass(product.status)" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium">
+                {{ getStatusText(product.status) }}
+              </span>
+            </dd>
+          </div>
 
-        <div class="border-t border-gray-200">
-          <dl>
-            <!-- Product Images -->
-            <div *ngIf="product.images && product.images.length > 0" class="px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500">Images du produit</dt>
-              <dd class="mt-1">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div *ngFor="let image of product.images" class="relative">
-                    <img [src]="image.url || 'placeholder.jpg'" [alt]="product.title" class="w-full h-48 object-cover rounded-lg shadow-md">
-                  </div>
+          <!-- Seller Information -->
+          <div *ngIf="product.seller" class="px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Vendeur</dt>
+            <dd class="mt-1">
+              <div class="flex items-center">
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">{{ product.seller.name }}</div>
+                  <div class="text-sm text-gray-500">{{ product.seller.email }}</div>
                 </div>
-              </dd>
-            </div>
+              </div>
+            </dd>
+          </div>
 
-            <!-- Description -->
-            <div class="px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500">Description</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ product.description }}</dd>
-            </div>
+          <!-- Dates -->
+          <div class="px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Dates</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <div>Créé le: {{ product.createdAt | date:'dd/MM/yyyy à HH:mm' }}</div>
+              <div *ngIf="product.updatedAt">Modifié le: {{ product.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</div>
+              <div *ngIf="product.approvedAt">Approuvé le: {{ product.approvedAt | date:'dd/MM/yyyy à HH:mm' }}</div>
+              <div *ngIf="product.publishedAt">Publié le: {{ product.publishedAt | date:'dd/MM/yyyy à HH:mm' }}</div>
+              <div *ngIf="product.expireAt">Expire le: {{ product.expireAt | date:'dd/MM/yyyy à HH:mm' }}</div>
+            </dd>
+          </div>
+        </dl>
+      </div>
 
-            <!-- Price -->
-            <div class="px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500">Prix</dt>
-              <dd class="mt-1 text-2xl font-bold text-green-600">{{ product.price | currency:'XOF':'symbol':'1.0-0' }}</dd>
-            </div>
-
-            <!-- Status -->
-            <div class="px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500">Statut</dt>
-              <dd class="mt-1">
-                <span [ngClass]="getStatusClass(product.status)" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium">
-                  {{ getStatusText(product.status) }}
-                </span>
-              </dd>
-            </div>
-
-            <!-- Seller Information -->
-            <div *ngIf="product.seller" class="px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500">Vendeur</dt>
-              <dd class="mt-1">
-                <div class="flex items-center">
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900">{{ product.seller.name }}</div>
-                    <div class="text-sm text-gray-500">{{ product.seller.email }}</div>
-                  </div>
-                </div>
-              </dd>
-            </div>
-
-            <!-- Dates -->
-            <div class="px-4 py-5 sm:px-6">
-              <dt class="text-sm font-medium text-gray-500">Dates</dt>
-              <dd class="mt-1 text-sm text-gray-900">
-                <div>Créé le: {{ product.createdAt | date:'dd/MM/yyyy à HH:mm' }}</div>
-                <div *ngIf="product.updatedAt">Modifié le: {{ product.updatedAt | date:'dd/MM/yyyy à HH:mm' }}</div>
-                <div *ngIf="product.approvedAt">Approuvé le: {{ product.approvedAt | date:'dd/MM/yyyy à HH:mm' }}</div>
-                <div *ngIf="product.publishedAt">Publié le: {{ product.publishedAt | date:'dd/MM/yyyy à HH:mm' }}</div>
-                <div *ngIf="product.expireAt">Expire le: {{ product.expireAt | date:'dd/MM/yyyy à HH:mm' }}</div>
-              </dd>
-            </div>
-          </dl>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-          <button (click)="goBack()" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-            Retour aux produits
-          </button>
-        </div>
+      <!-- Action Buttons -->
+      <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <button (click)="goBack()" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+          Retour aux produits
+        </button>
       </div>
     </div>
   </div>

@@ -15,7 +15,7 @@ export const routes: Routes = [
   { path: 'auth/register', component: RegisterComponent },
   { path: 'products', component: ProductsComponent },
   {
-    path: 'product-details/:id',
+    path: 'product/:id',
     component: ProductDetails
   },
   { path: 'vendor/products', component: VendorProductsComponent, canActivate: [authGuard] },

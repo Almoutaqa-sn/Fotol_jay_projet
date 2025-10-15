@@ -40,11 +40,15 @@ export class NavigationComponent {
   }
 
   getNavClass(): string {
-    if (this.isBrowser && this.userRole === 'seller' && this.router.url.includes('/vendor/products')) {
-      return 'bg-yellow-600';
-    }
-    if (this.isBrowser && this.router.url.includes('/products')) {
-      return 'bg-yellow-600';
+    if (this.isBrowser) {
+      const currentUrl = this.router.url;
+      console.log('Current URL for nav class:', currentUrl); // Debug log
+      if (this.userRole === 'seller' && currentUrl.includes('/vendor/products')) {
+        return 'bg-yellow-600';
+      }
+      if (currentUrl.includes('/products') || currentUrl.includes('/product/')) {
+        return 'bg-yellow-600';
+      }
     }
     return 'bg-gold-600';
   }

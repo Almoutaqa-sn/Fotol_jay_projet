@@ -121,11 +121,22 @@ export class VendorProductsComponent implements OnInit {
     formData.append('price', this.newProduct.price.toString());
 
     if (this.capturedImage) {
-      const imageBlob = this.dataURLToBlob(this.capturedImage);
-      formData.append('images', imageBlob, `product-${Date.now()}.jpg`);
+      // Convertir le base64 en blob
+      fetch(this.capturedImage)
+        .then(res => res.blob())
+        .then(blob => {
+          formData.append('images', blob, `product-${Date.now()}.jpg`);
+          this.sendProductData(formData);
+        })
+        .catch(error => {
+          console.error('Error converting image:', error);
+          this.error = 'Erreur lors de la conversion de l\'image';
+          this.loading = false;
+        });
+    } else {
+      this.error = 'Une image est requise';
+      this.loading = false;
     }
-
-    this.sendProductData(formData);
   }
 
   private validateForm(): boolean {
@@ -149,47 +160,28 @@ export class VendorProductsComponent implements OnInit {
   }
 
   private sendProductData(formData: FormData) {
-    console.log('Sending product data:', {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      price: formData.get('price'),
-      hasImage: !!formData.get('images')
-    });
-
+    console.log('Sending product data');
+    
     this.productService.createProduct(formData).subscribe({
       next: (response) => {
-        console.log('Product creation response:', response);
+        console.log('Product created:', response);
         this.loading = false;
-        this.successMessage = 'Produit ajouté avec succès! Il sera visible après validation par un administrateur.';
-        this.newProduct = { title: '', description: '', price: 0 };
-        this.capturedImage = null;
-
-        // Immediately refresh products list
-        this.products = []; // Clear cache to force reload
-        this.loadProducts();
-
-        // Auto-hide success message after 5 seconds
-        setTimeout(() => {
-          this.successMessage = null;
-        }, 5000);
+        this.successMessage = 'Produit ajouté avec succès! Il sera visible après validation.';
+        this.resetForm();
+        this.loadProducts(); // Recharger la liste
       },
       error: (err) => {
-        console.error('Product creation error:', err);
+        console.error('Error creating product:', err);
         this.loading = false;
-        if (err.status === 400) {
-          this.error = 'Données invalides. Vérifiez tous les champs.';
-        } else if (err.status === 413) {
-          this.error = 'L\'image est trop volumineuse. Veuillez prendre une photo plus petite.';
-        } else if (err.status === 415) {
-          this.error = 'Format d\'image non supporté.';
-        } else {
-          this.error = err.error?.message || 'Erreur lors de l\'ajout du produit. Veuillez réessayer.';
-        }
-        if (err.status === 401) {
-          this.router.navigate(['/login']);
-        }
+        this.error = err.error?.message || 'Erreur lors de l\'ajout du produit';
       }
     });
+  }
+
+  private resetForm() {
+    this.newProduct = { title: '', description: '', price: 0 };
+    this.capturedImage = null;
+    this.showAddForm = false;
   }
 
   onSubmit() {

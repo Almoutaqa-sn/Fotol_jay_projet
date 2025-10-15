@@ -1,0 +1,17 @@
+:host ::ng-deep .product-details-nav header {
+  background-color: #FFD700 !important;
+  border-bottom: 4px solid #000000 !important;
+}
+
+:host ::ng-deep .product-details-nav header * {
+  color: #000000 !important;
+}
+
+:host ::ng-deep .product-details-nav button {
+  border-color: #000000 !important;
+}
+
+:host ::ng-deep .product-details-nav button:hover {
+  background-color: #000000 !important;
+  color: #FFD700 !important;
+}

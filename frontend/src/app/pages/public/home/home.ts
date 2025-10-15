@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,56 +17,65 @@ export class Home implements OnInit {
   sellerForm: FormGroup;
   registrationSuccess = false;
   registrationError = '';
-  loading = false; // Add this property
+  loading = false;
   pendingProducts: Product[] = [];
   publishedProducts: Product[] = [];
+  isAdmin = false;
 
-  get isAdmin(): boolean {
-    return this.authService.getUserRole() === 'admin';
-  }
-
-  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService, private productService: ProductService) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.sellerForm = this.fb.group({
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^7[0-9]{8}$|^78[0-9]{7}$|^77[0-9]{7}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+    this.isAdmin = this.authService.getUserRole() === 'admin';
   }
 
   ngOnInit() {
     this.loading = true;
     this.loadPublishedProducts();
-    this.loadPendingProducts();
+    if (this.isAdmin) {
+      this.loadPendingProducts();
+    }
   }
 
   loadPublishedProducts() {
+    this.loading = true;
     this.productService.getPublishedProducts().subscribe({
       next: (products: Product[]) => {
         this.publishedProducts = products.slice(0, 8);
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading published products', err);
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   loadPendingProducts() {
-    if (this.authService.getUserRole() === 'admin') {
-      this.loading = true;
-      this.productService.getPendingProducts().subscribe({
-        next: (products: Product[]) => {
-          this.pendingProducts = products.slice(0, 8);
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error loading pending products', err);
-          this.loading = false;
-        }
-      });
-    }
+    this.loading = true;
+    this.productService.getPendingProducts().subscribe({
+      next: (products: Product[]) => {
+        this.pendingProducts = products.slice(0, 8);
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading pending products', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   navigateToCategory(category: string) {
@@ -139,38 +148,37 @@ export class Home implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 
-  viewProduct(productId: number) {
-    this.router.navigate(['/product-details', productId]);
+  viewProduct(id: number) {
+    this.router.navigate(['/product', id]);
   }
 
   approveProduct(productId: number) {
-    if (confirm('Êtes-vous sûr de vouloir approuver ce produit ?')) {
-      this.productService.approveProduct(productId).subscribe({
-        next: () => {
-          this.loadPublishedProducts(); // Recharger les produits approuvés
-          this.loadPendingProducts(); // Recharger les produits en attente
-        },
-        error: (err: any) => {
-          console.error('Error approving product:', err);
-          alert('Erreur lors de l\'approbation du produit');
-        }
-      });
-    }
+    this.loading = true;
+    this.productService.approveProduct(productId).subscribe({
+      next: () => {
+        this.loadPendingProducts();
+        this.loadPublishedProducts();
+      },
+      error: (err: any) => {
+        console.error('Error approving product:', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   rejectProduct(productId: number) {
-    if (confirm('Êtes-vous sûr de vouloir rejeter ce produit ?')) {
-      this.productService.rejectProduct(productId).subscribe({
-        next: () => {
-          this.loadPublishedProducts(); // Recharger les produits approuvés
-          this.loadPendingProducts(); // Recharger les produits en attente
-        },
-        error: (err: any) => {
-          console.error('Error rejecting product:', err);
-          alert('Erreur lors du rejet du produit');
-        }
-      });
-    }
+    this.loading = true;
+    this.productService.rejectProduct(productId).subscribe({
+      next: () => {
+        this.loadPendingProducts();
+      },
+      error: (err: any) => {
+        console.error('Error rejecting product:', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   handleImageError(event: any) {

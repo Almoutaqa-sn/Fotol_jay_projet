@@ -3,22 +3,10 @@ import { HttpClient, HttpHeaders, HttpEvent, HttpEventType, HttpResponse } from 
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError, map, filter } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { Product } from '../interfaces/product.interface';
 
-export interface Product {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  status: string;
-  sellerId: number;
-  seller?: { id: number; name: string; email: string };
-  images: { url: string; filename: string }[];
-  createdAt: string;
-  updatedAt: string;
-  approvedAt?: string;
-  publishedAt?: string;
-  expireAt?: string;
-}
+export type { Product };
+
 
 interface ProductResponse {
   message: string;
@@ -29,7 +17,7 @@ interface ProductResponse {
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = '/api/products';  // Changed to relative URL
+  private apiUrl = '/api/products';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -127,6 +115,10 @@ export class ProductService {
         return throwError(() => error);
       })
     );
+  }
+
+  getProduct(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
 }
 
