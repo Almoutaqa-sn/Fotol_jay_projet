@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpEvent, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, map, filter, finalize } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Product } from '../interfaces/product.interface';
@@ -36,9 +36,26 @@ export class ProductService {
 
   // Search published products
   searchProducts(query: string): Observable<Product[]> {
+    if (!query || query.length < 3) {
+      return of([]); // Retourne un tableau vide si la recherche est trop courte
+    }
+    
     return this.http.get<Product[]>(`${this.apiUrl}/search`, {
       params: { q: query }
-    });
+    }).pipe(
+      map(products => {
+        // Trier les produits: premium d'abord, puis par date
+        return products.sort((a, b) => {
+          if (a.isPremium && !b.isPremium) return -1;
+          if (!a.isPremium && b.isPremium) return 1;
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+      }),
+      catchError(error => {
+        console.error('Search error:', error);
+        return throwError(() => 'Erreur lors de la recherche');
+      })
+    );
   }
 
   // Get seller's products
@@ -109,6 +126,26 @@ export class ProductService {
     );
   }
 
+  // Mark product as premium (admin)
+  markAsPremium(productId: number): Observable<Product> {
+    return this.http.post<Product>(
+      `${this.apiUrl}/${productId}/premium`,
+      {},
+      { headers: this.getHeaders() }
+    ).pipe(
+      tap(product => console.log('Product marked as premium:', product)),
+      catchError(error => {
+        console.error('Error marking product as premium:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Remove premium status from product (admin)
+  removePremium(productId: number): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}/${productId}/unpremium`, {}, { headers: this.getHeaders() });
+  }
+
   // Get product stats (admin)
   getProductStats(): Observable<any> {
     return this.http.get(`${this.apiUrl}/stats`, { headers: this.getHeaders() });
@@ -125,16 +162,14 @@ export class ProductService {
     );
   }
 
+  // Simplifier la méthode getProduct pour utiliser directement getProductById
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`).pipe(
       tap(product => console.log('Fetched product:', product)),
       catchError((error: HttpErrorResponse) => {
         console.error('Error fetching product:', error);
-        return throwError(() => 
-          error.status === 404 ? 'Produit non trouvé' : 'Erreur lors du chargement du produit'
-        );
-      }),
-      finalize(() => console.log('Product fetch complete'))
+        return throwError(() => error.status === 404 ? 'Produit non trouvé' : 'Erreur lors du chargement du produit');
+      })
     );
   }
 

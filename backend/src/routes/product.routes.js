@@ -11,7 +11,7 @@ import path from 'path';
 
 const router = express.Router();
 
-// Configure multer for image uploads
+// Configure multer for image uploads 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -43,6 +43,43 @@ router.post('/:id/approve', authMiddleware, adminMiddleware, async (req, res) =>
     }
 });
 
+// Marquer un produit comme premium (admin)
+router.post('/:id/premium', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const product = await prisma.product.update({
+            where: { id: parseInt(req.params.id) },
+            data: { isPremium: true },
+            include: { 
+                images: true,
+                seller: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true
+                    }
+                }
+            }
+        });
+        res.json(product);
+    } catch (err) {
+        console.error('Error marking product as premium:', err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
+// Retirer le statut premium d'un produit (admin)
+router.post('/:id/unpremium', authMiddleware, adminMiddleware, async (req, res) => {
+    try {
+        const product = await prisma.product.update({
+            where: { id: parseInt(req.params.id) },
+            data: { isPremium: false }
+        });
+        res.json({ message: 'Statut premium retiré', product });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
 // Rejeter un produit (admin)
 router.post('/:id/reject', authMiddleware, adminMiddleware, async (req, res) => {
     try {
@@ -54,10 +91,24 @@ router.post('/:id/reject', authMiddleware, adminMiddleware, async (req, res) => 
     }
 });
 
-// Supprimer un produit
-router.delete('/:id', authMiddleware, adminMiddleware, async (req, res) => {
+// Supprimer un produit (vendeur ou admin)
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        const product = await deleteProduct(parseInt(req.params.id));
+        const productId = parseInt(req.params.id);
+
+        // Vérifier que le produit appartient au vendeur connecté (sauf si admin)
+        if (req.user.role !== 'admin') {
+            const product = await prisma.product.findUnique({
+                where: { id: productId },
+                select: { sellerId: true }
+            });
+
+            if (!product || product.sellerId !== req.user.id) {
+                return res.status(403).json({ error: 'Vous ne pouvez supprimer que vos propres produits' });
+            }
+        }
+
+        const product = await deleteProduct(productId);
         res.json({ message: Message.PRODUCT_DELETED, product });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -201,27 +252,64 @@ router.post('/create', authMiddleware, upload.array('images'), async (req, res) 
     }
 });
 
-// Search published products
+// Get product by ID (déplacer cette route AVANT la route search)
+router.get('/:id', async (req, res) => {
+  try {
+    const productId = parseInt(req.params.id);
+
+    if (isNaN(productId)) {
+      return res.status(400).json({ error: 'ID de produit invalide' });
+    }
+
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId
+      },
+      include: {
+        images: true,
+        seller: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true
+          }
+        }
+      }
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Produit non trouvé' });
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error('Error fetching product:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Search published products (déplacer cette route AVANT la route :id)
 router.get('/search', async (req, res) => {
   try {
     const { q } = req.query;
 
     if (!q || q.length < 3) {
-      return res.status(400).json({ error: 'Search term must be at least 3 characters long' });
+      return res.status(400).json({ 
+        error: 'Le terme de recherche doit contenir au moins 3 caractères'
+      });
     }
 
     const products = await prisma.product.findMany({
       where: {
-        status: 'published',
-        OR: [
+        AND: [
           {
-            title: {
-              contains: q
-            }
+            status: 'published'
           },
           {
-            description: {
-              contains: q
+            title: {
+              startsWith: q,
+              mode: 'insensitive'
             }
           }
         ]
@@ -235,48 +323,17 @@ router.get('/search', async (req, res) => {
             email: true
           }
         }
+      },
+      orderBy: {
+        isPremium: 'desc'
       }
     });
 
     res.json(products);
-  } catch (error) {
-    console.error('Error searching products:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      details: error.message
-    });
-  }
-});
-
-// Get product by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const product = await prisma.product.findUnique({
-      where: {
-        id: parseInt(req.params.id)
-      },
-      include: {
-        images: true,
-        seller: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        }
-      }
-    });
-
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
-    res.json(product);
   } catch (err) {
-    console.error('Error fetching product:', err);
-    res.status(500).json({ error: err.message });
+    console.error('Error searching products:', err);
+    res.status(500).json({ error: 'Erreur lors de la recherche' });
   }
 });
-
 
 export default router;

@@ -17,6 +17,7 @@ export interface Product {
   description: string;
   price: number;
   status: 'pending' | 'published' | 'deleted';
+  isPremium?: boolean;
   createdAt: string;
   updatedAt: string;
   sellerId: number;

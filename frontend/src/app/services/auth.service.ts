@@ -77,6 +77,11 @@ export class AuthService {
     return user?.role === 'admin';
   }
 
+  getUserName(): string | null {
+    const user = this.getUser();
+    return user ? user.name : null;
+  }
+
   private getHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({

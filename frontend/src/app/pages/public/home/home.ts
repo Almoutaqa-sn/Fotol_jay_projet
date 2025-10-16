@@ -24,10 +24,15 @@ export class Home implements OnInit {
   pendingProducts: Product[] = [];
   publishedProducts: Product[] = [];
   isAdmin = false;
+  isLoggedIn = false;
+  userName = '';
   searchTerm = '';
   isSearching = false;
   searchTerms = new Subject<string>();
   noResults = false;
+  currentPage = 1;
+  itemsPerPage = 6;
+  totalProducts = 0;
 
   constructor(
     private router: Router,
@@ -43,6 +48,8 @@ export class Home implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
     this.isAdmin = this.authService.getUserRole() === 'admin';
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.userName = this.authService.getUserName() || '';
   }
 
   ngOnInit() {
@@ -52,7 +59,7 @@ export class Home implements OnInit {
       this.loadPendingProducts();
     }
 
-    // Configurer la recherche avec debounce
+    // Configuration de la recherche en temps réel
     this.searchTerms.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -69,11 +76,12 @@ export class Home implements OnInit {
           error: (err) => {
             console.error('Search error:', err);
             this.isSearching = false;
+            this.noResults = true;
             this.cdr.detectChanges();
           }
         });
-      } else if (term.length === 0) {
-        this.noResults = false;
+      } else {
+        // Si moins de 3 caractères, recharger tous les produits
         this.loadPublishedProducts();
       }
     });
@@ -83,7 +91,21 @@ export class Home implements OnInit {
     this.loading = true;
     this.productService.getPublishedProducts().subscribe({
       next: (products: Product[]) => {
-        this.publishedProducts = products.slice(0, 8);
+        // Trier les produits : premium en premier, puis par date de création décroissante
+        const sortedProducts = products.sort((a, b) => {
+          // Les produits premium en premier
+          if (a.isPremium && !b.isPremium) return -1;
+          if (!a.isPremium && b.isPremium) return 1;
+          // Puis trier par date de création (plus récent en premier)
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        });
+
+        this.totalProducts = sortedProducts.length;
+        // Pagination : afficher seulement les produits de la page actuelle
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        this.publishedProducts = sortedProducts.slice(startIndex, endIndex);
+
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -125,27 +147,38 @@ export class Home implements OnInit {
   }
 
   onSearch(term: string) {
+    this.searchTerm = term;
     this.searchTerms.next(term);
+
+    if (term.length < 3) {
+      this.noResults = false;
+      this.loadPublishedProducts(); // Recharger tous les produits si recherche trop courte
+      return;
+    }
   }
 
   searchProducts() {
-    if (this.searchTerm.length >= 3) {
-      this.isSearching = true;
-      this.productService.searchProducts(this.searchTerm).subscribe({
-        next: (products) => {
-          this.publishedProducts = products;
-          this.isSearching = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Search error:', err);
-          this.isSearching = false;
-          this.cdr.detectChanges();
-        }
-      });
-    } else if (this.searchTerm.length === 0) {
-      this.loadPublishedProducts(); // Recharge tous les produits si recherche vide
+    if (this.searchTerm.length < 3) {
+      return;
     }
+
+    this.isSearching = true;
+    this.noResults = false;
+
+    this.productService.searchProducts(this.searchTerm).subscribe({
+      next: (products) => {
+        this.publishedProducts = products;
+        this.noResults = products.length === 0;
+        this.isSearching = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Search error:', err);
+        this.isSearching = false;
+        this.noResults = true;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   openSellModal() {
@@ -233,8 +266,58 @@ export class Home implements OnInit {
     });
   }
 
+  markAsPremium(productId: number, event: Event) {
+    event.preventDefault(); // Empêcher la propagation du clic
+    event.stopPropagation(); // Empêcher la navigation
+
+    this.loading = true;
+    this.productService.markAsPremium(productId).subscribe({
+      next: (updatedProduct) => {
+        // Recharger tous les produits pour mettre à jour la pagination
+        this.loadPublishedProducts();
+      },
+      error: (err) => {
+        console.error('Error marking product as premium:', err);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalProducts / this.itemsPerPage);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadPublishedProducts();
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadPublishedProducts();
+    }
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadPublishedProducts();
+    }
+  }
+
   handleImageError(event: any) {
     console.error('Image loading error:', event);
     event.target.src = 'assets/placeholder.jpg';
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+    // Recharger la page pour mettre à jour l'état de l'authentification
+    window.location.reload();
   }
 }

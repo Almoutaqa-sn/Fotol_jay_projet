@@ -54,6 +54,7 @@ model Product {
   description  String?
   price        Float
   status       ProductStatus   @default(pending)
+  isPremium    Boolean         @default(false)
   createdAt    DateTime        @default(now())
   approvedAt   DateTime?
   publishedAt  DateTime?

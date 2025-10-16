@@ -159,7 +159,7 @@ export class VendorProductsComponent implements OnInit {
 
   private sendProductData(formData: FormData) {
     console.log('Sending product data');
-    
+
     this.productService.createProduct(formData).subscribe({
       next: (response) => {
         console.log('Product created:', response);
@@ -167,6 +167,8 @@ export class VendorProductsComponent implements OnInit {
         this.successMessage = 'Produit ajouté avec succès! Il sera visible après validation.';
         this.resetForm();
         this.loadProducts(); // Recharger la liste
+        // Ne pas fermer le formulaire automatiquement pour permettre à l'utilisateur de voir le message
+        // this.showAddForm = false;
       },
       error: (err) => {
         console.error('Error creating product:', err);

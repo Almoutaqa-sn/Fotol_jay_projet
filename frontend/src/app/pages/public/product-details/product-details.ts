@@ -27,19 +27,24 @@ export class ProductDetails implements OnInit {
 
   ngOnInit() {
     const id = parseInt(this.route.snapshot.paramMap.get('id') || '0');
+    if (!id) {
+      this.error = 'ID du produit invalide';
+      return;
+    }
+
     this.loading = true;
+    this.error = null;
     
-    this.productService.getProduct(id).pipe(
-      finalize(() => {
-        this.loading = false;
-        this.cdr.detectChanges(); // Force change detection
-      })
-    ).subscribe({
+    this.productService.getProduct(id).subscribe({
       next: (product) => {
+        console.log('Product loaded:', product);
         this.product = product;
+        this.loading = false;
       },
       error: (err) => {
-        this.error = err;
+        console.error('Error loading product:', err);
+        this.error = typeof err === 'string' ? err : 'Erreur lors du chargement du produit';
+        this.loading = false;
       }
     });
   }
